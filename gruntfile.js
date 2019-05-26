@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         copy:{
             main:{
                 files: [
-                    {expand: true, cwd: 'dev/', src: ['*.php', 'img/**', 'css/fonts/*'], dest: 'prod/'},
+                    {expand: true, cwd: 'dev/', src: ['*.php', 'php/*.php', 'img/**', 'css/fonts/*'], dest: 'prod/'},
                     {expand: true, cwd: 'dev/', src: ['fonts/**'], dest: 'prod/'},
                     {expand: true, cwd: 'dev/', src: ['favicon.ico'], dest: 'prod/'},
                     {expand: true, cwd: 'dev/', src: ['blog/**'], dest: 'prod/'},
@@ -21,14 +21,15 @@ module.exports = function(grunt) {
             devDist: {
                 src: [
                     'dev/js/libs/*.js', // All JS in the libs folder
+                    'dev/js/bootstrap.js',
                     'dev/js/main.js',
-                    'dev/js/top-nav.js',
                 ],
                 dest: 'dev/js/production.js',
             },
             prodDist: {
                 src: [
                     'dev/js/libs/*.js',
+                    'dev/js/bootstrap.js',
                     'dev/js/main.js'
                 ],
                 dest: 'prod/js/production.js'
@@ -103,7 +104,7 @@ module.exports = function(grunt) {
                 }
             },
             copyfiles: {
-                files: ['dev/*.php', 'dev/img/*', 'dev/*.html'],
+                files: ['dev/*.php', 'dev/php/*.php', 'dev/img/*', 'dev/*.html'],
                 tasks: ['copy'],
                 options: {
                     spawn: false,
