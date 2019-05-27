@@ -1,4 +1,6 @@
 <?php
+  include "server.php";
+
   class Card{
     public $name = "";
     public $set = "";
@@ -14,7 +16,7 @@
 
     // intialize card object
     public function __construct(){
-      $this->__set("name", "Black Lotus");
+      $this->__set("name", "Survival of the Fittest");
       $url = "http://api.scryfall.com/cards/named?exact=" . rawurlencode($this->__get('name'));
       // use key 'http' even if you send the request to https://...
       $options = array(
@@ -31,7 +33,6 @@
       }else{
         var_dump($result);
         $result_array = json_decode($result, true);
-        print_r($result_array['name']);
         $this->__set("set", $result_array['set_name']);
         $this->__set("type", $result_array['type_line']);
         $this->__set("cmc", $result_array['cmc']);
@@ -40,6 +41,8 @@
         $this->__set("image_medium", $result_array['image_uris']['normal']);
         $this->__set("image_small", $result_array['image_uris']['small']);
       }
+
+      $this->addToDatabase();
     }
 
     public function __get($property){
@@ -55,10 +58,45 @@
 
       return $this;
     }
+
+    public function isInDatabase(){
+      $sql = "SELECT * FROM cards WHERE name='" . $this->__get('name') . "'";
+      $sql_connection = connectToDatabase();
+      $result = $sql_connection->query($sql);
+      $assoc_array = $result->fetch_assoc();
+      if($assoc_array){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+    public function addToDatabase(){
+      $sql = "INSERT INTO cards (name, set_name, type, subtype, cmc, rules_text, power, toughness, image_large, image_medium, image_small)
+      VALUES ('" .  $this->__get('name') . "', '" . $this->__get('set_name') . "', '" . $this->__get('type') . "', '" . $this->__get('subtype') . "', '" . $this->__get('cmc') . "', '" . $this->__get('rules_text') . "', '" . $this->__get('power') . "', '" . $this->__get('toughness') . "', '" . $this->__get('image_large') . "', '" . $this->__get('image_medium') . "', '" . $this->__get('image_small') . "')";
+
+      print_r($sql);
+      print_r($this->isInDatabase());
+      if(!$this->isInDatabase()){
+        $sql_connection = connectToDatabase();
+
+        if($sql_connection->query($sql) === TRUE){
+          print_r("Added to database successfully");
+        }else{
+          echo "Error: " . $sql . "<br>" . $sql_connection->error;
+        }
+
+        $sql_connection->close();
+      }else{
+        print_r("Card already in database");
+      }
+
+
+
+
+    }
   }
 
   $cardTest = new Card;
   $vars = get_object_vars($cardTest);
-  print_r ($vars);
-  echo $cardTest->__get("name");
  ?>
