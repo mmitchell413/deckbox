@@ -6,8 +6,7 @@ $(document).ready(function(){
     $('#autocomplete-results').show();
     cardSearchAutocomplete($(this).val());
   });
-  fetchCardFromApi("Black Lotus");
-  console.log(cardObj);
+  //fetchCardFromApi("Black Lotus");
 });
 
 $(document).on('click', '#autocomplete-results li a', function(){
@@ -15,7 +14,7 @@ $(document).on('click', '#autocomplete-results li a', function(){
 });
 
 $(document).on('mouseover', '#autocomplete-results li a', function(e){
-  imageSearch(encodeURIComponent($(this).html()));
+  updateTooltipImage(imageSearch(encodeURIComponent($(this).html())));
   $('#search-image-hover').show();
 });
 
@@ -54,15 +53,20 @@ function cardSearchAutocomplete(query){
 
 function imageSearch(cardName){
   var scryfallCardImageUrl, imageUrl;
-  scryfallCardImageUrl = "https://api.scryfall.com/cards/named?exact=" + cardName;
-
+  scryfallCardImageUrl = "https://api.scryfall.com/cards/named?exact=" + encodeURIComponent(cardName);
   $.ajax({
     url: scryfallCardImageUrl,
+    async: false,
     success: function(result){
-      imageUrl = result['image_uris']['normal'];
-      updateTooltipImage(imageUrl);
+      imageUrl = result.image_uris.normal;
     }
   });
+  console.log(imageUrl);
+  if(imageUrl){
+    return imageUrl;
+  }else{
+    return false;
+  }
 }
 
 function fetchCardFromApi(cardName){

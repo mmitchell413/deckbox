@@ -60,6 +60,19 @@
           <img src="" id="search-image-hover" />
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="deck-name" id="deck1-name">Deck Name</h2>
+          <div class="draggable-container" id="draggable-container1" ondrop="deckDropEvent(event)" ondragover="deckDragOverEvent(event)">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h2 class="deck-name" id="deck2-name">Deck Name</h2>
+          <div class="draggable-container" id="draggable-container2"  ondrop="deckDropEvent(event)" ondragover="deckDragOverEvent(event)">
+
+          </div>
+        </div>
+      </div>
     </div>
     <script type='text/javascript' src='js/production.min.js'></script>
   </body>

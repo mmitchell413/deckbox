@@ -21,6 +21,7 @@ module.exports = function(grunt) {
             devDist: {
                 src: [
                     'dev/js/libs/*.js', // All JS in the libs folder
+                    'dev/js/dependencies/*.js',
                     'dev/js/bootstrap.js',
                     'dev/js/main.js',
                 ],
@@ -29,6 +30,7 @@ module.exports = function(grunt) {
             prodDist: {
                 src: [
                     'dev/js/libs/*.js',
+                    'dev/js/dependencies/*.js',
                     'dev/js/bootstrap.js',
                     'dev/js/main.js'
                 ],
@@ -83,7 +85,7 @@ module.exports = function(grunt) {
 
         watch: {
             scripts: {
-                files: ['dev/js/*.js', 'dev/js/libs/*.js'],
+                files: ['dev/js/*.js', 'dev/js/libs/*.js', 'dev/js/dependencies/*.js'],
                 tasks: ['concat'],
                 options: {
                     spawn: false,
@@ -97,7 +99,7 @@ module.exports = function(grunt) {
                 }
             },
             minify: {
-                files:  ['dev/js/*.js', 'dev/js/libs/*.js'],
+                files:  ['dev/js/*.js', 'dev/js/libs/*.js', 'dev/js/dependencies/*.js'],
                 tasks: ['uglify'],
                 options: {
                     spawn:false,

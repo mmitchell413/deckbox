@@ -75,8 +75,6 @@
       $sql = "INSERT INTO cards (name, set_name, type, subtype, cmc, rules_text, power, toughness, image_large, image_medium, image_small)
       VALUES ('" .  $this->__get('name') . "', '" . $this->__get('set_name') . "', '" . $this->__get('type') . "', '" . $this->__get('subtype') . "', '" . $this->__get('cmc') . "', '" . $this->__get('rules_text') . "', '" . $this->__get('power') . "', '" . $this->__get('toughness') . "', '" . $this->__get('image_large') . "', '" . $this->__get('image_medium') . "', '" . $this->__get('image_small') . "')";
 
-      print_r($sql);
-      print_r($this->isInDatabase());
       if(!$this->isInDatabase()){
         $sql_connection = connectToDatabase();
 
@@ -86,7 +84,7 @@
           echo "Error: " . $sql . "<br>" . $sql_connection->error;
         }
 
-        $sql_connection->close();
+        closeDatabaseConn($sql_connection);
       }else{
         print_r("Card already in database");
       }

@@ -10587,6 +10587,243 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
+var card;
+
+function createCardFromApi(apiResponse){
+
+}
+
+function importCard(cardObj){
+
+}
+
+var testDeck =
+{
+  "name": "Test Deck",
+  "image": "",
+  "id": "1846774283",
+  "mainboard": [
+    {
+      "name": "Jace, the Mind Sculptor",
+      "quantity": 2,
+      "current-deck": "1846774283"
+    },
+    {
+      "name": "Logic Knot",
+      "quantity": 2,
+      "current-deck": "1739264872"
+    }
+    // "Survival of the Fittest": 4,
+    // "Jace, the Mind Sculptor": 4,
+    // "Logic Knot": 2,
+    // "Path to Exile": 4,
+    // "Dovin's Veto": 2
+  ],
+  "sideboard":{
+
+  }
+}
+
+displayDeckDraggableList(testDeck, $('#draggable-container1'));
+
+function importDeck(decklist){
+
+}
+
+function exportDeck(){
+
+}
+
+function getDeckMainboard(){
+
+}
+
+function setDeckMainboard(){
+
+}
+
+function getDeckSideboard(){
+
+}
+
+function setDeckSideboard(){
+
+}
+
+function addCardMainboard(){
+
+}
+
+function removeCardMainboard(){
+
+}
+
+function updateCardMainboard(){
+
+}
+
+function getCardMainboard(){
+
+}
+
+function addCardSideboard(){
+
+}
+
+function removeCardSideboard(){
+
+}
+
+function updateCardSideboard(){
+
+}
+
+function getCardSideboard(){
+
+}
+
+function generateCardUID(){
+  var uid = Math.floor(Math.random() * 99999999);
+  return uid;
+}
+
+function displayDeckDraggableList(deckJson, container){
+  container.prev(".deck-name").text(deckJson["name"]);
+  var mainboard = deckJson["mainboard"];
+  mainboard.forEach(function(element){
+    var cardImg = imageSearch(element.name);
+    var cardObj = "<div class='draggable-card' draggable='true' ondragstart='cardDrag(event)'' id='" + generateCardUID() + "' style='background:url(" + cardImg +"); background-size:contain;'/></div>"
+    container.append(cardObj);
+  });
+}
+
+function displayDeckList(deckJson, container){
+  deckObj = JSON.parse(deckJson);
+}
+
+function deckDropEvent(e){
+  e.preventDefault();
+  var data = e.dataTransfer.getData("text/html");
+  if(e.target.className == "draggable-container"){
+    e.target.appendChild(document.getElementById(data));
+  }else{
+    e.target.closest(".draggable-container").appendChild(document.getElementById(data));
+  }
+}
+
+function deckDragOverEvent(e){
+  e.preventDefault();
+}
+
+function cardDrag(e){
+  e.dataTransfer.setData("text/html", e.target.id);
+}
+
+var inventory =
+{
+  "inventory_uid": 1288172787,
+  "inventory_user": "Ajax413",
+  "inventory": [
+    {
+      "name": "Jace, the Mind Sculptor",
+      "set": "EMA",
+      "quantity": 1,
+      "condition": "NM",
+      "modifiers": [
+        {
+          "foil": false,
+          "artist_signed": false
+        }
+      ],
+      "trade": false
+    },
+    {
+      "name": "Vendilion Clique",
+      "set": "M25",
+      "quantity": 2,
+      "condition": "NM",
+      "modifiers": [
+        {
+          "foil": false,
+          "artist_signed": false
+        }
+      ],
+      "trade": false
+    }
+  ]
+};
+var inventory = JSON.stringify(inventory);
+
+var inventoryObj;
+
+importInventory(inventory);
+addCardInventory("Teferi, Hero of Dominaria", "DOM", 2, "NM", false, false);
+
+
+/**
+*
+*/
+function importInventory(inv){
+  inventoryObj = JSON.parse(inventory);
+}
+
+/**
+*
+*/
+function exportInventory(){
+
+}
+
+/**
+* Function to add card to inventory object
+*/
+function addCardInventory(name, set, quantity, condition, modifiers, trade){
+  // TODO Check if card is already in inventory, then update if so
+
+  var card = {
+    "name": name,
+    "set": set,
+    "condition": condition,
+    "modifiers": modifiers,
+    "trade": trade
+  }
+
+  inventoryObj['inventory'].push(card);
+}
+
+/**
+*
+*/
+function removeCardInventory(name){
+  var index = getCardInventory(name)['index'];
+  console.log(index);
+  if(index > -1){
+    inventoryObj['inventory'].splice(index, 1);
+  }
+}
+
+/**
+*
+*/
+function updateCardInventory(){
+
+}
+
+/**
+*
+*/
+function getCardInventory(name){
+  var index = -1;
+  var val = name;
+  inventoryObj['inventory'].find(function(item, i){
+    if(item.name === val){
+      index = i;
+    }
+  });
+  var filteredObj = inventoryObj['inventory'][index];
+  return {"index": index, "cardObj": filteredObj};
+}
+
 /*!
   * Bootstrap v4.3.1 (https://getbootstrap.com/)
   * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
@@ -15031,8 +15268,7 @@ $(document).ready(function(){
     $('#autocomplete-results').show();
     cardSearchAutocomplete($(this).val());
   });
-  fetchCardFromApi("Black Lotus");
-  console.log(cardObj);
+  //fetchCardFromApi("Black Lotus");
 });
 
 $(document).on('click', '#autocomplete-results li a', function(){
@@ -15040,7 +15276,7 @@ $(document).on('click', '#autocomplete-results li a', function(){
 });
 
 $(document).on('mouseover', '#autocomplete-results li a', function(e){
-  imageSearch(encodeURIComponent($(this).html()));
+  updateTooltipImage(imageSearch(encodeURIComponent($(this).html())));
   $('#search-image-hover').show();
 });
 
@@ -15079,15 +15315,20 @@ function cardSearchAutocomplete(query){
 
 function imageSearch(cardName){
   var scryfallCardImageUrl, imageUrl;
-  scryfallCardImageUrl = "https://api.scryfall.com/cards/named?exact=" + cardName;
-
+  scryfallCardImageUrl = "https://api.scryfall.com/cards/named?exact=" + encodeURIComponent(cardName);
   $.ajax({
     url: scryfallCardImageUrl,
+    async: false,
     success: function(result){
-      imageUrl = result['image_uris']['normal'];
-      updateTooltipImage(imageUrl);
+      imageUrl = result.image_uris.normal;
     }
   });
+  console.log(imageUrl);
+  if(imageUrl){
+    return imageUrl;
+  }else{
+    return false;
+  }
 }
 
 function fetchCardFromApi(cardName){

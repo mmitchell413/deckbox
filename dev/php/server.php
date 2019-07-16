@@ -15,4 +15,8 @@
     return $sql_connection;
   }
 
+  function closeDatabaseConn($db){
+    $db->close();
+  }
+
 ?>

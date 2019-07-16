@@ -19,7 +19,7 @@
     }
 
     public function addCard($cardName){
-        
+
     }
   }
  ?>
